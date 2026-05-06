@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  emoji       String
+  date        DateTime
+  location    String
+  description String
+  hostName    String
+  hostPhone   String
+  createdAt   DateTime @default(now())
+
+  rsvps Rsvp[]
+  messages MockMessage[]
+}
+
+model Rsvp {
+  id        String   @id @default(cuid())
+  eventId   String
+  name      String
+  phone     String
+  status    String   // "GOING" | "MAYBE" | "NOT_GOING"
+  smsOptIn  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, phone])
+}
+
+model MockMessage {
+  id        String   @id @default(cuid())
+  eventId   String
+  toPhone   String
+  toName    String
+  body      String
+  type      String   // "reminder"
+  sentAt    DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
