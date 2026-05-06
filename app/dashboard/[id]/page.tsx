@@ -39,7 +39,7 @@ export default async function DashboardPage({
         id: r.id,
         name: r.name,
         phone: r.phone,
-        status: r.status,
+        status: r.status as "GOING" | "MAYBE" | "NOT_GOING",
         smsOptIn: r.smsOptIn,
         createdAt: r.createdAt.toISOString(),
       }))}
