@@ -10,7 +10,7 @@ export default function Home() {
           href="/create"
           className="w-full bg-black text-white text-center py-4 font-bold text-base tracking-wide hover:bg-gray-900 active:bg-gray-800 transition-colors"
         >
-          Create an event ✨
+          Create an event
         </Link>
         <Link
           href="/login"

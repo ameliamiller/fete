@@ -5,7 +5,7 @@ import { formatPhone, isValidPhone } from "@/lib/phone";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { title, emoji, date, location, description, hostName, hostPhone } =
+    const { title, emoji, date, location, description, hostName, hostPhone, cohostPhones = [] } =
       body;
 
     if (!title || !emoji || !date || !location || !hostName || !hostPhone) {
@@ -31,6 +31,7 @@ export async function POST(req: Request) {
         description: (description ?? "").trim(),
         hostName: hostName.trim(),
         hostPhone: formatPhone(hostPhone),
+        cohostPhones: (cohostPhones as string[]).filter(isValidPhone).map(formatPhone),
       },
     });
 

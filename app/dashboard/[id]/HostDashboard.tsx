@@ -115,19 +115,27 @@ export function HostDashboard({
   const maybe = rsvps.filter((r) => r.status === "MAYBE").length;
   const notGoing = rsvps.filter((r) => r.status === "NOT_GOING").length;
   const smsEligible = rsvps.filter(
-    (r) => r.smsOptIn && (r.status === "GOING" || r.status === "MAYBE")
+    (r) => r.status === "GOING" || r.status === "MAYBE"
   ).length;
 
   return (
     <main className="px-5 pb-12">
       {/* Header */}
       <div className="py-8 border-b border-black">
-        <div className="flex items-center gap-3 mb-1">
-          <span className="text-4xl">{event.emoji}</span>
-          <div>
-            <h1 className="text-xl font-black leading-tight">{event.title}</h1>
-            <p className="text-xs text-gray-500">{formatDate(event.date)} · {event.location}</p>
+        <div className="flex items-center justify-between gap-3 mb-1">
+          <div className="flex items-center gap-3">
+            <span className="text-4xl">{event.emoji}</span>
+            <div>
+              <h1 className="text-xl font-black leading-tight">{event.title}</h1>
+              <p className="text-xs text-gray-500">{formatDate(event.date)} · {event.location}</p>
+            </div>
           </div>
+          <a
+            href={`/dashboard/${event.id}/edit`}
+            className="text-xs font-bold border border-black px-3 py-1.5 hover:bg-black hover:text-white transition-colors shrink-0"
+          >
+            Edit
+          </a>
         </div>
       </div>
 
@@ -227,7 +235,6 @@ export function HostDashboard({
                     <p className="font-bold text-sm">{rsvp.name}</p>
                     <p className="text-xs text-gray-400">
                       {displayPhone(rsvp.phone)}
-                      {rsvp.smsOptIn && " · 📱 SMS on"}
                     </p>
                   </div>
                   <span className="text-xs font-bold whitespace-nowrap">

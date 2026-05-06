@@ -2,25 +2,38 @@
 
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/Button";
 import { EmojiPicker } from "@/components/EmojiPicker";
 import { CohostInput } from "@/components/CohostInput";
+import Link from "next/link";
 
-export default function CreateEvent() {
+interface Props {
+  id: string;
+  initial: {
+    title: string;
+    emoji: string;
+    date: string;
+    location: string;
+    description: string;
+    hostName: string;
+    cohostPhones: string[];
+  };
+}
+
+export function EditEventForm({ id, initial }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [emojis, setEmojis] = useState<string[]>([]);
-  const [cohosts, setCohosts] = useState<string[]>([]);
-
+  const [emojis, setEmojis] = useState<string[]>(
+    initial.emoji ? [...initial.emoji] : []
+  );
+  const [cohosts, setCohosts] = useState<string[]>(initial.cohostPhones);
   const [form, setForm] = useState({
-    title: "",
-    date: "",
-    location: "",
-    description: "",
-    hostName: "",
-    hostPhone: "",
+    title: initial.title,
+    date: initial.date,
+    location: initial.location,
+    description: initial.description,
+    hostName: initial.hostName,
   });
 
   function set(key: string, value: string) {
@@ -31,29 +44,21 @@ export default function CreateEvent() {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     try {
-      const res = await fetch("/api/events", {
-        method: "POST",
+      const res = await fetch(`/api/events/${id}`, {
+        method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, emoji: emojis.join("") || "🎉", cohostPhones: cohosts }),
+        body: JSON.stringify({ ...form, emoji: emojis.join("") || initial.emoji, cohostPhones: cohosts }),
       });
-      let data: { id?: string; error?: string } = {};
-      try {
-        data = await res.json();
-      } catch {
-        setError(
-          `Server error (${res.status}). Make sure the database is set up: run npm run db:push.`
-        );
-        return;
-      }
+      const data = await res.json();
       if (!res.ok) {
         setError(data.error || "Something went wrong.");
         return;
       }
-      router.push(`/dashboard/${data.id}?created=1`);
+      router.push(`/dashboard/${id}`);
+      router.refresh();
     } catch {
-      setError("Could not reach the server. Is npm run dev running?");
+      setError("Could not reach the server.");
     } finally {
       setLoading(false);
     }
@@ -61,23 +66,22 @@ export default function CreateEvent() {
 
   return (
     <main className="px-5 pb-12">
-      <PageHeader
-        emoji=""
-        title="New event"
-        subtitle="Fill in the details and share the link."
-      />
+      <div className="py-8 flex items-center justify-between border-b border-black mb-6">
+        <h1 className="text-2xl font-black">Edit event</h1>
+        <Link href={`/dashboard/${id}`} className="text-sm text-gray-400 hover:text-black">
+          Cancel
+        </Link>
+      </div>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <EmojiPicker selected={emojis} onChange={setEmojis} />
 
-        {/* Title */}
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest mb-1">
             Event name
           </label>
           <input
             type="text"
-            placeholder="Summer rooftop party"
             value={form.title}
             onChange={(e) => set("title", e.target.value)}
             required
@@ -85,7 +89,6 @@ export default function CreateEvent() {
           />
         </div>
 
-        {/* Date */}
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest mb-1">
             Date & time
@@ -98,14 +101,12 @@ export default function CreateEvent() {
           />
         </div>
 
-        {/* Location */}
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest mb-1">
             Location
           </label>
           <input
             type="text"
-            placeholder="123 Anywhere St, Brooklyn NY"
             value={form.location}
             onChange={(e) => set("location", e.target.value)}
             required
@@ -113,16 +114,12 @@ export default function CreateEvent() {
           />
         </div>
 
-        {/* Description */}
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest mb-1">
             Description{" "}
-            <span className="normal-case font-normal text-gray-400">
-              (optional)
-            </span>
+            <span className="normal-case font-normal text-gray-400">(optional)</span>
           </label>
           <textarea
-            placeholder="BYOB, dress code: all white, bring a snack to share…"
             value={form.description}
             onChange={(e) => set("description", e.target.value)}
             rows={3}
@@ -135,36 +132,17 @@ export default function CreateEvent() {
 
         <hr className="border-black" />
 
-        {/* Host name */}
         <div>
           <label className="block text-xs font-bold uppercase tracking-widest mb-1">
             Your name
           </label>
           <input
             type="text"
-            placeholder="Alex"
             value={form.hostName}
             onChange={(e) => set("hostName", e.target.value)}
             required
             maxLength={60}
           />
-        </div>
-
-        {/* Host phone */}
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-widest mb-1">
-            Your phone number
-          </label>
-          <input
-            type="tel"
-            placeholder="(555) 867-5309"
-            value={form.hostPhone}
-            onChange={(e) => set("hostPhone", e.target.value)}
-            required
-          />
-          <p className="text-xs text-gray-400 mt-1">
-            So you can access your host dashboard.
-          </p>
         </div>
 
         {error && (
@@ -174,7 +152,7 @@ export default function CreateEvent() {
         )}
 
         <Button type="submit" loading={loading}>
-          Create event
+          Save changes
         </Button>
       </form>
     </main>

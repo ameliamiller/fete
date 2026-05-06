@@ -42,7 +42,7 @@ export function EventRsvpView({ event, going, maybe }: Props) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [status, setStatus] = useState<RsvpStatus | null>(null);
-  const [smsOptIn, setSmsOptIn] = useState(true);
+  const smsOptIn = true;
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
@@ -199,20 +199,6 @@ export function EventRsvpView({ event, going, maybe }: Props) {
             </div>
           </div>
 
-          {/* SMS opt-in */}
-          <label className="flex items-start gap-3 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={smsOptIn}
-              onChange={(e) => setSmsOptIn(e.target.checked)}
-              className="mt-0.5 w-5 h-5 border-2 border-black accent-black flex-shrink-0"
-            />
-            <span className="text-xs text-gray-600 leading-relaxed">
-              Text me a reminder before the event. By checking this you consent
-              to receive one SMS reminder. Standard messaging rates may apply.
-            </span>
-          </label>
-
           {error && (
             <p className="text-sm font-medium border border-black px-3 py-2 bg-gray-50">
               ⚠️ {error}
@@ -220,7 +206,7 @@ export function EventRsvpView({ event, going, maybe }: Props) {
           )}
 
           <Button type="submit" loading={loading}>
-            RSVP 🎉
+            RSVP
           </Button>
         </form>
       </div>

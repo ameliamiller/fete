@@ -14,7 +14,6 @@ export async function POST(
       rsvps: {
         where: {
           status: { in: ["GOING", "MAYBE"] },
-          smsOptIn: true,
         },
       },
     },

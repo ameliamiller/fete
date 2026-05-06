@@ -8,15 +8,16 @@ datasource db {
 }
 
 model Event {
-  id          String   @id @default(cuid())
-  title       String
-  emoji       String
-  date        DateTime
-  location    String
-  description String
-  hostName    String
-  hostPhone   String
-  createdAt   DateTime @default(now())
+  id            String   @id @default(cuid())
+  title         String
+  emoji         String
+  date          DateTime
+  location      String
+  description   String
+  hostName      String
+  hostPhone     String
+  cohostPhones  String[] @default([])
+  createdAt     DateTime @default(now())
 
   rsvps Rsvp[]
   messages MockMessage[]

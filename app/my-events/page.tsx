@@ -23,7 +23,12 @@ export default async function MyEventsPage() {
   if (!phone) redirect("/login");
 
   const events = await prisma.event.findMany({
-    where: { hostPhone: phone },
+    where: {
+      OR: [
+        { hostPhone: phone },
+        { cohostPhones: { has: phone } },
+      ],
+    },
     include: { rsvps: true },
     orderBy: { date: "desc" },
   });
