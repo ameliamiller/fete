@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { displayPhone } from "@/lib/phone";
+import { BackButton } from "@/components/BackButton";
 
 export const dynamic = "force-dynamic";
 
@@ -35,7 +36,8 @@ export default async function MyEventsPage() {
 
   return (
     <main className="px-5 pb-12">
-      <div className="py-8 border-b border-black">
+      <BackButton href="/" />
+      <div className="py-4 border-b border-black">
         <h1 className="text-2xl font-black">Your events</h1>
         <p className="text-sm text-gray-500 mt-1">{displayPhone(phone)}</p>
       </div>
@@ -54,7 +56,6 @@ export default async function MyEventsPage() {
         <div className="flex flex-col divide-y divide-gray-200">
           {events.map((event) => {
             const going = event.rsvps.filter((r) => r.status === "GOING").length;
-            const maybe = event.rsvps.filter((r) => r.status === "MAYBE").length;
             const isPast = event.date < new Date();
             return (
               <Link
@@ -73,8 +74,7 @@ export default async function MyEventsPage() {
                 </div>
                 <div className="text-xs text-gray-500 shrink-0 text-right">
                   {going > 0 && <div>✅ {going}</div>}
-                  {maybe > 0 && <div>🤔 {maybe}</div>}
-                  {going === 0 && maybe === 0 && <div className="text-gray-300">—</div>}
+                  {going === 0 && <div className="text-gray-300">—</div>}
                 </div>
               </Link>
             );

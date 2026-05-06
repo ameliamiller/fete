@@ -60,7 +60,6 @@ export default async function EventPage({
   if (!event) notFound();
 
   const going = event.rsvps.filter((r) => r.status === "GOING").length;
-  const maybe = event.rsvps.filter((r) => r.status === "MAYBE").length;
 
   return (
     <EventRsvpView
@@ -74,7 +73,6 @@ export default async function EventPage({
         hostName: event.hostName,
       }}
       going={going}
-      maybe={maybe}
     />
   );
 }

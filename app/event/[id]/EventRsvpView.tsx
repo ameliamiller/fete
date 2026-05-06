@@ -3,7 +3,7 @@
 import { useState, FormEvent } from "react";
 import { Button } from "@/components/Button";
 
-type RsvpStatus = "GOING" | "MAYBE" | "NOT_GOING";
+type RsvpStatus = "GOING" | "NOT_GOING";
 
 interface EventData {
   id: string;
@@ -18,13 +18,11 @@ interface EventData {
 interface Props {
   event: EventData;
   going: number;
-  maybe: number;
 }
 
 const STATUS_OPTIONS: { value: RsvpStatus; label: string; emoji: string }[] = [
   { value: "GOING", label: "Going", emoji: "✅" },
-  { value: "MAYBE", label: "Maybe", emoji: "🤔" },
-  { value: "NOT_GOING", label: "Can't make it", emoji: "😢" },
+  { value: "NOT_GOING", label: "Can't make it", emoji: "😭" },
 ];
 
 function formatDate(iso: string) {
@@ -38,7 +36,7 @@ function formatDate(iso: string) {
   });
 }
 
-export function EventRsvpView({ event, going, maybe }: Props) {
+export function EventRsvpView({ event, going }: Props) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [status, setStatus] = useState<RsvpStatus | null>(null);
@@ -133,10 +131,9 @@ export function EventRsvpView({ event, going, maybe }: Props) {
           </p>
         )}
 
-        {(going > 0 || maybe > 0) && (
+        {going > 0 && (
           <div className="flex gap-4 mt-4 text-xs font-bold uppercase tracking-widest">
-            {going > 0 && <span>✅ {going} going</span>}
-            {maybe > 0 && <span>🤔 {maybe} maybe</span>}
+            <span>✅ {going} going</span>
           </div>
         )}
       </div>
@@ -180,20 +177,20 @@ export function EventRsvpView({ event, going, maybe }: Props) {
             <label className="block text-xs font-bold uppercase tracking-widest mb-2">
               Are you going?
             </label>
-            <div className="flex flex-col gap-2">
+            <div className="flex gap-3">
               {STATUS_OPTIONS.map((opt) => (
                 <button
                   type="button"
                   key={opt.value}
                   onClick={() => setStatus(opt.value)}
-                  className={`flex items-center gap-3 px-4 py-3 border-2 text-left font-bold transition-colors ${
+                  className={`flex-1 py-3 text-2xl border-2 transition-colors ${
                     status === opt.value
-                      ? "border-black bg-black text-white"
-                      : "border-black bg-white text-black hover:bg-gray-50"
+                      ? "border-black bg-black"
+                      : "border-black bg-white hover:bg-gray-50"
                   }`}
+                  aria-label={opt.label}
                 >
-                  <span className="text-xl">{opt.emoji}</span>
-                  <span>{opt.label}</span>
+                  {opt.emoji}
                 </button>
               ))}
             </div>

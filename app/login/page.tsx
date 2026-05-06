@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { isValidPhone } from "@/lib/phone";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [phone, setPhone] = useState("");
@@ -58,7 +59,10 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen px-6 gap-8">
+    <main className="flex flex-col items-center justify-center min-h-screen px-6 gap-8 relative">
+      <Link href="/" className="absolute top-5 left-5 text-gray-400 hover:text-black transition-colors text-sm">
+        ←
+      </Link>
       <div className="text-center">
         <h1 className="text-2xl font-black">View your events</h1>
         <p className="text-sm text-gray-500 mt-1">

@@ -1,20 +1,23 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { sendReminder } from "@/lib/sms";
+import { sendCustomMessage } from "@/lib/sms";
 
 export async function POST(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ eventId: string }> }
 ) {
   const { eventId } = await params;
+  const { body } = await req.json();
+
+  if (!body?.trim()) {
+    return NextResponse.json({ error: "Message body is required." }, { status: 400 });
+  }
 
   const event = await prisma.event.findUnique({
     where: { id: eventId },
     include: {
       rsvps: {
-        where: {
-          status: { in: ["GOING", "MAYBE"] },
-        },
+        where: { status: "GOING" },
       },
     },
   });
@@ -25,14 +28,7 @@ export async function POST(
 
   const results = await Promise.allSettled(
     event.rsvps.map((rsvp) =>
-      sendReminder(
-        eventId,
-        rsvp.phone,
-        rsvp.name,
-        event.title,
-        event.date,
-        event.location
-      )
+      sendCustomMessage(eventId, rsvp.phone, rsvp.name, body.trim())
     )
   );
 

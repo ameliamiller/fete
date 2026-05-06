@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/Button";
 import { EmojiPicker } from "@/components/EmojiPicker";
 import { CohostInput } from "@/components/CohostInput";
+import { BackButton } from "@/components/BackButton";
 
 export default function CreateEvent() {
   const router = useRouter();
@@ -61,6 +62,7 @@ export default function CreateEvent() {
 
   return (
     <main className="px-5 pb-12">
+      <BackButton href="/" />
       <PageHeader
         emoji=""
         title="New event"

@@ -55,26 +55,17 @@ export async function sendMagicLink(
   }
 }
 
-export async function sendReminder(
+export async function sendCustomMessage(
   eventId: string,
   toPhone: string,
   toName: string,
-  eventTitle: string,
-  eventDate: Date,
-  eventLocation: string
+  body: string
 ) {
-  const dateStr = eventDate.toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
-  const body = `Hey ${toName}! Just a reminder — ${eventTitle} is on ${dateStr} at ${eventLocation}. See you there!`;
-
   if (twilioConfigured) {
     await sendViaTwilio(toPhone, body);
+    // Also log it so host can see what was sent
+    await sendMock(eventId, toPhone, toName, body, "message");
   } else {
-    await sendMock(eventId, toPhone, toName, body, "reminder");
+    await sendMock(eventId, toPhone, toName, body, "message");
   }
 }
