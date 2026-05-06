@@ -25,7 +25,7 @@ export function EditEventForm({ id, initial }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [emojis, setEmojis] = useState<string[]>(
-    initial.emoji ? [...initial.emoji] : []
+    initial.emoji ? Array.from(initial.emoji) : []
   );
   const [cohosts, setCohosts] = useState<string[]>(initial.cohostPhones);
   const [form, setForm] = useState({
