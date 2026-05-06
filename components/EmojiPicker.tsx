@@ -12,8 +12,8 @@ interface EmojiData {
   emojis: Record<string, EmojiEntry>;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const data = require("@emoji-mart/data") as EmojiData;
+import rawData from "@emoji-mart/data";
+const data = rawData as unknown as EmojiData;
 
 // Build a flat array once at module level so it never re-runs
 const ALL: { native: string; keywords: string }[] = Object.values(
