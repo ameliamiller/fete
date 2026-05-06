@@ -37,9 +37,10 @@ export async function POST(req: Request) {
     const url = `${baseUrl}/verify?token=${link.token}`;
 
     const isMock = !process.env.TWILIO_ACCOUNT_SID;
-    const result = await sendMagicLink(formatted, url, isMock);
+    await sendMagicLink(formatted, url, isMock).catch(() => {});
 
-    return NextResponse.json({ ok: true, mockUrl: result.mockUrl ?? null });
+    // Always return the URL so the user can click it directly if SMS fails
+    return NextResponse.json({ ok: true, url });
   } catch {
     return NextResponse.json({ error: "Something went wrong." }, { status: 500 });
   }

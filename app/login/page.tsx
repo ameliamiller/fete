@@ -7,7 +7,7 @@ export default function LoginPage() {
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
-  const [mockUrl, setMockUrl] = useState<string | null>(null);
+  const [loginUrl, setLoginUrl] = useState<string | null>(null);
   const [error, setError] = useState("");
 
   async function handleSubmit(e: FormEvent) {
@@ -30,7 +30,7 @@ export default function LoginPage() {
         return;
       }
       setSent(true);
-      if (data.mockUrl) setMockUrl(data.mockUrl);
+      if (data.url) setLoginUrl(data.url);
     } catch {
       setError("Could not reach the server.");
     } finally {
@@ -45,18 +45,13 @@ export default function LoginPage() {
         <p className="text-sm text-gray-500 max-w-[260px] leading-relaxed">
           We sent a login link to your phone. It expires in 15 minutes.
         </p>
-        {mockUrl && (
-          <div className="border border-black p-4 text-left w-full max-w-[360px]">
-            <p className="text-xs font-bold uppercase tracking-widest mb-2 text-gray-400">
-              Dev mode — no SMS sent
-            </p>
-            <a
-              href={mockUrl}
-              className="text-sm break-all underline"
-            >
-              {mockUrl}
-            </a>
-          </div>
+        {loginUrl && (
+          <a
+            href={loginUrl}
+            className="w-full max-w-[320px] border-2 border-black bg-black text-white text-center py-4 font-bold text-base hover:bg-gray-900 transition-colors"
+          >
+            Tap here to log in →
+          </a>
         )}
       </main>
     );
