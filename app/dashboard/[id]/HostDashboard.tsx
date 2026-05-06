@@ -10,7 +10,7 @@ interface Rsvp {
   id: string;
   name: string;
   phone: string;
-  status: RsvpStatus;
+  status: string;
   smsOptIn: boolean;
   createdAt: string;
 }
@@ -231,7 +231,7 @@ export function HostDashboard({
                     </p>
                   </div>
                   <span className="text-xs font-bold whitespace-nowrap">
-                    {STATUS_LABEL[rsvp.status]}
+                    {STATUS_LABEL[rsvp.status as RsvpStatus] ?? rsvp.status}
                   </span>
                 </div>
               ))}

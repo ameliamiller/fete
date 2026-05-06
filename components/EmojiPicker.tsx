@@ -1,9 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-// @emoji-mart/data ships a flat JSON object — import as unknown then cast
-import rawData from "@emoji-mart/data";
-
 interface EmojiEntry {
   id: string;
   name: string;
@@ -15,7 +12,8 @@ interface EmojiData {
   emojis: Record<string, EmojiEntry>;
 }
 
-const data = rawData as EmojiData;
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const data = require("@emoji-mart/data") as EmojiData;
 
 // Build a flat array once at module level so it never re-runs
 const ALL: { native: string; keywords: string }[] = Object.values(
