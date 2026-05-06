@@ -40,6 +40,21 @@ async function sendMock(
   console.log(`[MOCK SMS] To: ${toPhone} — ${body}`);
 }
 
+export async function sendMagicLink(
+  phone: string,
+  url: string,
+  isMock: boolean
+): Promise<{ mockUrl?: string }> {
+  const body = `Your fete link: ${url}\n\nExpires in 15 minutes.`;
+  if (!isMock && twilioConfigured) {
+    await sendViaTwilio(phone, body);
+    return {};
+  } else {
+    console.log(`[MOCK SMS] Magic link to ${phone}: ${url}`);
+    return { mockUrl: url };
+  }
+}
+
 export async function sendReminder(
   eventId: string,
   toPhone: string,

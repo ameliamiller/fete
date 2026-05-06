@@ -37,6 +37,15 @@ model Rsvp {
   @@unique([eventId, phone])
 }
 
+model MagicLink {
+  id        String    @id @default(cuid())
+  phone     String
+  token     String    @unique @default(cuid())
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+}
+
 model MockMessage {
   id        String   @id @default(cuid())
   eventId   String
