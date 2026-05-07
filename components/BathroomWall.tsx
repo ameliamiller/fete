@@ -103,7 +103,7 @@ export function BathroomWall({ eventId, userName, initialPosts }: Props) {
   return (
     <div className="mt-8">
       <p className="text-xs font-bold uppercase tracking-widest mb-3">
-        The wall
+        Wall
       </p>
       <div
         ref={wallRef}
