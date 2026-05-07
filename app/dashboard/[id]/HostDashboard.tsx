@@ -185,9 +185,12 @@ export function HostDashboard({
       {smsEligible > 0 && (
         <div className="mt-5">
           {!composing ? (
-            <Button variant="outline" onClick={() => setComposing(true)}>
+            <button
+              onClick={() => setComposing(true)}
+              className="w-full border border-black text-black text-sm font-bold px-5 py-1.5 hover:bg-black hover:text-white transition-colors"
+            >
               Text guests
-            </Button>
+            </button>
           ) : (
             <div className="border border-black p-4 flex flex-col gap-3">
               <div className="flex items-center justify-between">

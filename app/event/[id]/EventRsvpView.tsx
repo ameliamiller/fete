@@ -20,9 +20,9 @@ interface Props {
   going: number;
 }
 
-const STATUS_OPTIONS: { value: RsvpStatus; label: string; emoji: string }[] = [
-  { value: "GOING", label: "Going", emoji: "✅" },
-  { value: "NOT_GOING", label: "Can't make it", emoji: "😭" },
+const STATUS_OPTIONS: { value: RsvpStatus; label: string }[] = [
+  { value: "GOING", label: "yes :)" },
+  { value: "NOT_GOING", label: "no :(" },
 ];
 
 function formatDate(iso: string) {
@@ -81,21 +81,17 @@ export function EventRsvpView({ event, going }: Props) {
   }
 
   if (done) {
-    const opt = STATUS_OPTIONS.find((o) => o.value === doneStatus);
+    const isGoing = doneStatus === "GOING";
     return (
       <main className="px-5 pb-12">
-        <div className="flex flex-col items-center gap-4 py-12 text-center">
-          <span className="text-6xl">{opt?.emoji}</span>
-          <h1 className="text-2xl font-black">You&apos;re {opt?.label.toLowerCase()}!</h1>
-          <p className="text-sm text-gray-500 leading-relaxed max-w-[260px]">
-            {smsOptIn
-              ? "We'll text you a reminder before the event."
-              : "See you there!"}
+        <div className="flex flex-col items-center gap-6 py-12 text-center">
+          <p className="text-lg font-normal">
+            {isGoing ? "see you there :)" : "Maybe next time!"}
           </p>
-          <div className="border border-black px-5 py-4 text-left w-full mt-4">
+          <div className="border border-black px-5 py-4 text-left w-full">
             <p className="font-black text-lg">{event.emoji} {event.title}</p>
-            <p className="text-sm text-gray-600 mt-1">{formatDate(event.date)}</p>
-            <p className="text-sm text-gray-600">{event.location}</p>
+            <p className="text-sm text-gray-600 mt-2">{formatDate(event.date)}</p>
+            <p className="text-sm text-gray-600 mt-1">{event.location}</p>
           </div>
         </div>
       </main>
@@ -183,14 +179,13 @@ export function EventRsvpView({ event, going }: Props) {
                   type="button"
                   key={opt.value}
                   onClick={() => setStatus(opt.value)}
-                  className={`flex-1 py-3 text-2xl border-2 transition-colors ${
+                  className={`flex-1 py-3 text-sm font-bold border transition-colors ${
                     status === opt.value
-                      ? "border-black bg-black"
-                      : "border-black bg-white hover:bg-gray-50"
+                      ? "border-black bg-black text-white"
+                      : "border-black bg-white text-black hover:bg-gray-50"
                   }`}
-                  aria-label={opt.label}
                 >
-                  {opt.emoji}
+                  {opt.label}
                 </button>
               ))}
             </div>
