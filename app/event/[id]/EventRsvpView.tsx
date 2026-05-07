@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { Button } from "@/components/Button";
 import { formatDateET } from "@/lib/dates";
 import { BathroomWall, WallPost } from "@/components/BathroomWall";
@@ -28,6 +28,8 @@ const STATUS_OPTIONS: { value: RsvpStatus; label: string }[] = [
   { value: "NOT_GOING", label: "no :(" },
 ];
 
+const storageKey = (eventId: string) => `fete_rsvp_${eventId}`;
+
 export function EventRsvpView({ event, going, wallPosts }: Props) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -38,6 +40,21 @@ export function EventRsvpView({ event, going, wallPosts }: Props) {
   const [done, setDone] = useState(false);
   const [doneStatus, setDoneStatus] = useState<RsvpStatus | null>(null);
   const [submittedName, setSubmittedName] = useState("");
+
+  // Restore previous RSVP from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(storageKey(event.id));
+      if (saved) {
+        const { name: n, status: s } = JSON.parse(saved);
+        setSubmittedName(n);
+        setDoneStatus(s);
+        setDone(true);
+      }
+    } catch {
+      // ignore
+    }
+  }, [event.id]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -59,8 +76,13 @@ export function EventRsvpView({ event, going, wallPosts }: Props) {
         return;
       }
       setSubmittedName(name);
-      setDone(true);
       setDoneStatus(status);
+      setDone(true);
+      try {
+        localStorage.setItem(storageKey(event.id), JSON.stringify({ name, status }));
+      } catch {
+        // ignore
+      }
     } catch {
       setError("Network error. Please try again.");
     } finally {
@@ -81,6 +103,17 @@ export function EventRsvpView({ event, going, wallPosts }: Props) {
             <p className="text-sm text-gray-600 mt-2">{formatDateET(event.date)}</p>
             <p className="text-sm text-gray-600 mt-1">{event.location}</p>
           </div>
+          <button
+            onClick={() => {
+              try { localStorage.removeItem(storageKey(event.id)); } catch { /* ignore */ }
+              setDone(false);
+              setDoneStatus(null);
+              setSubmittedName("");
+            }}
+            className="text-xs text-gray-300 hover:text-black transition-colors"
+          >
+            change my RSVP
+          </button>
         </div>
 
         <BathroomWall
