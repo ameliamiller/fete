@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, useCallback, FormEvent } from "react";
 import { Button } from "@/components/Button";
 import { formatDateET } from "@/lib/dates";
 import { BathroomWall, WallPost } from "@/components/BathroomWall";
@@ -40,6 +40,14 @@ export function EventRsvpView({ event, going, wallPosts }: Props) {
   const [done, setDone] = useState(false);
   const [doneStatus, setDoneStatus] = useState<RsvpStatus | null>(null);
   const [submittedName, setSubmittedName] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  const copyLink = useCallback(() => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }, []);
 
   // Restore previous RSVP from localStorage on mount
   useEffect(() => {
@@ -115,6 +123,13 @@ export function EventRsvpView({ event, going, wallPosts }: Props) {
             change my RSVP
           </button>
         </div>
+
+        <button
+          onClick={copyLink}
+          className="w-full border border-black py-3 text-sm font-bold uppercase tracking-widest hover:bg-black hover:text-white transition-colors"
+        >
+          {copied ? "link copied!" : "share with friends"}
+        </button>
 
         <BathroomWall
           eventId={event.id}
