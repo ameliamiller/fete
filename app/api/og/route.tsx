@@ -1,17 +1,8 @@
 import { ImageResponse } from "next/og";
 import { prisma } from "@/lib/prisma";
+import { formatDateShortET } from "@/lib/dates";
 
 export const runtime = "nodejs";
-
-function formatDateShort(date: Date) {
-  return date.toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
-}
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -29,7 +20,7 @@ export async function GET(req: Request) {
       if (event) {
         title = event.title;
         emoji = event.emoji;
-        date = formatDateShort(event.date);
+        date = formatDateShortET(event.date);
         location = event.location;
         host = event.hostName;
       }

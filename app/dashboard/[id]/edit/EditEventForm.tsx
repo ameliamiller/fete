@@ -6,6 +6,7 @@ import { Button } from "@/components/Button";
 import { EmojiPicker } from "@/components/EmojiPicker";
 import { CohostInput } from "@/components/CohostInput";
 import Link from "next/link";
+import { utcIsoToETInput, etInputToISO } from "@/lib/dates";
 
 interface Props {
   id: string;
@@ -20,13 +21,6 @@ interface Props {
   };
 }
 
-/** Convert a UTC ISO string to the local "YYYY-MM-DDTHH:MM" format for datetime-local inputs */
-function utcIsoToLocalInput(utcIso: string): string {
-  const d = new Date(utcIso);
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
-
 export function EditEventForm({ id, initial }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -37,7 +31,7 @@ export function EditEventForm({ id, initial }: Props) {
   const [cohosts, setCohosts] = useState<string[]>(initial.cohostPhones);
   const [form, setForm] = useState({
     title: initial.title,
-    date: utcIsoToLocalInput(initial.date),
+    date: utcIsoToETInput(initial.date),
     location: initial.location,
     description: initial.description,
     hostName: initial.hostName,
@@ -57,8 +51,8 @@ export function EditEventForm({ id, initial }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
-          // Convert local datetime string back to UTC ISO
-          date: new Date(form.date).toISOString(),
+          // Treat the input as Eastern Time and convert to UTC ISO
+          date: etInputToISO(form.date),
           emoji: emojis.join("") || initial.emoji,
           cohostPhones: cohosts,
         }),

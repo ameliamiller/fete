@@ -4,18 +4,9 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { displayPhone } from "@/lib/phone";
 import { BackButton } from "@/components/BackButton";
-
 export const dynamic = "force-dynamic";
 
-function formatDate(date: Date) {
-  return date.toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
-}
+import { formatDateShortET } from "@/lib/dates";
 
 export default async function MyEventsPage() {
   const cookieStore = await cookies();
@@ -68,7 +59,7 @@ export default async function MyEventsPage() {
                   <div className="min-w-0">
                     <p className="font-bold text-sm truncate">{event.title}</p>
                     <p className={`text-xs mt-0.5 ${isPast ? "text-gray-400" : "text-gray-600"}`}>
-                      {formatDate(event.date)}
+                      {formatDateShortET(event.date)}
                     </p>
                   </div>
                 </div>

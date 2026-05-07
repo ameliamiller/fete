@@ -2,6 +2,7 @@
 
 import { useState, FormEvent } from "react";
 import { Button } from "@/components/Button";
+import { formatDateET } from "@/lib/dates";
 
 type RsvpStatus = "GOING" | "NOT_GOING";
 
@@ -26,14 +27,7 @@ const STATUS_OPTIONS: { value: RsvpStatus; label: string }[] = [
 ];
 
 function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
+  return formatDateET(iso);
 }
 
 export function EventRsvpView({ event, going }: Props) {

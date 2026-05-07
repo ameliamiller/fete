@@ -48,6 +48,7 @@ const STATUS_LABEL: Record<RsvpStatus, string> = {
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
+    timeZone: "America/New_York",
     weekday: "short",
     month: "short",
     day: "numeric",

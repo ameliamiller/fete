@@ -2,17 +2,12 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { EventRsvpView } from "./EventRsvpView";
 import type { Metadata } from "next";
+import { formatDateShortET } from "@/lib/dates";
 
 export const dynamic = "force-dynamic";
 
 function formatDateShort(date: Date) {
-  return date.toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
+  return formatDateShortET(date);
 }
 
 export async function generateMetadata({

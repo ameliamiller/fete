@@ -7,6 +7,7 @@ import { Button } from "@/components/Button";
 import { EmojiPicker } from "@/components/EmojiPicker";
 import { CohostInput } from "@/components/CohostInput";
 import { BackButton } from "@/components/BackButton";
+import { etInputToISO } from "@/lib/dates";
 
 export default function CreateEvent() {
   const router = useRouter();
@@ -39,8 +40,8 @@ export default function CreateEvent() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
-          // Convert local datetime string to UTC ISO so server stores the correct time
-          date: new Date(form.date).toISOString(),
+          // Treat the input as Eastern Time and convert to UTC ISO
+          date: etInputToISO(form.date),
           emoji: emojis.join("") || "🎉",
           cohostPhones: cohosts,
         }),
