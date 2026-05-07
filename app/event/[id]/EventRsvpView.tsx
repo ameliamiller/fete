@@ -229,14 +229,6 @@ export function EventRsvpView({ event, going, wallPosts }: Props) {
         </form>
       </div>
 
-      {/* Wall — read-only until RSVP'd */}
-      {wallPosts.length > 0 && (
-        <BathroomWall
-          eventId={event.id}
-          userName=""
-          initialPosts={wallPosts}
-        />
-      )}
     </main>
   );
 }
