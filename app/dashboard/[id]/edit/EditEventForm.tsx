@@ -20,6 +20,13 @@ interface Props {
   };
 }
 
+/** Convert a UTC ISO string to the local "YYYY-MM-DDTHH:MM" format for datetime-local inputs */
+function utcIsoToLocalInput(utcIso: string): string {
+  const d = new Date(utcIso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 export function EditEventForm({ id, initial }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -30,7 +37,7 @@ export function EditEventForm({ id, initial }: Props) {
   const [cohosts, setCohosts] = useState<string[]>(initial.cohostPhones);
   const [form, setForm] = useState({
     title: initial.title,
-    date: initial.date,
+    date: utcIsoToLocalInput(initial.date),
     location: initial.location,
     description: initial.description,
     hostName: initial.hostName,
@@ -48,7 +55,13 @@ export function EditEventForm({ id, initial }: Props) {
       const res = await fetch(`/api/events/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, emoji: emojis.join("") || initial.emoji, cohostPhones: cohosts }),
+        body: JSON.stringify({
+          ...form,
+          // Convert local datetime string back to UTC ISO
+          date: new Date(form.date).toISOString(),
+          emoji: emojis.join("") || initial.emoji,
+          cohostPhones: cohosts,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {

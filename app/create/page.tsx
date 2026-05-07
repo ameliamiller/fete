@@ -37,7 +37,13 @@ export default function CreateEvent() {
       const res = await fetch("/api/events", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, emoji: emojis.join("") || "🎉", cohostPhones: cohosts }),
+        body: JSON.stringify({
+          ...form,
+          // Convert local datetime string to UTC ISO so server stores the correct time
+          date: new Date(form.date).toISOString(),
+          emoji: emojis.join("") || "🎉",
+          cohostPhones: cohosts,
+        }),
       });
       let data: { id?: string; error?: string } = {};
       try {

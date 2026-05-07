@@ -13,18 +13,13 @@ export default async function EditEventPage({
   const event = await prisma.event.findUnique({ where: { id } });
   if (!event) notFound();
 
-  // Format date for datetime-local input (YYYY-MM-DDTHH:MM)
-  const localDate = new Date(event.date.getTime() - event.date.getTimezoneOffset() * 60000)
-    .toISOString()
-    .slice(0, 16);
-
   return (
     <EditEventForm
       id={event.id}
       initial={{
         title: event.title,
         emoji: event.emoji,
-        date: localDate,
+        date: event.date.toISOString(),
         location: event.location,
         description: event.description,
         hostName: event.hostName,
