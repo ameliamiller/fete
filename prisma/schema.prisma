@@ -19,8 +19,9 @@ model Event {
   cohostPhones  String[] @default([])
   createdAt     DateTime @default(now())
 
-  rsvps Rsvp[]
-  messages MockMessage[]
+  rsvps      Rsvp[]
+  messages   MockMessage[]
+  wallPosts  WallPost[]
 }
 
 model Rsvp {
@@ -45,6 +46,18 @@ model MagicLink {
   expiresAt DateTime
   usedAt    DateTime?
   createdAt DateTime  @default(now())
+}
+
+model WallPost {
+  id        String   @id @default(cuid())
+  eventId   String
+  name      String
+  message   String
+  x         Float    // 0–100, percent from left
+  y         Float    // 0–100, percent from top
+  createdAt DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 }
 
 model MockMessage {

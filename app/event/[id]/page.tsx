@@ -49,7 +49,7 @@ export default async function EventPage({
   const { id } = await params;
   const event = await prisma.event.findUnique({
     where: { id },
-    include: { rsvps: true },
+    include: { rsvps: true, wallPosts: { orderBy: { createdAt: "asc" } } },
   });
 
   if (!event) notFound();
@@ -68,6 +68,13 @@ export default async function EventPage({
         hostName: event.hostName,
       }}
       going={going}
+      wallPosts={event.wallPosts.map((p) => ({
+        id: p.id,
+        name: p.name,
+        message: p.message,
+        x: p.x,
+        y: p.y,
+      }))}
     />
   );
 }
