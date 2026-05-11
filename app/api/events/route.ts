@@ -40,7 +40,7 @@ export async function POST(req: Request) {
       const base = process.env.NEXT_PUBLIC_BASE_URL ?? "https://fete-xi.vercel.app";
       const longUrl = `${base}/event/${event.id}`;
       const res = await fetch(
-        `https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`
+        `https://is.gd/create.php?format=simple&url=${encodeURIComponent(longUrl)}`
       );
       if (res.ok) {
         const shortUrl = (await res.text()).trim();
