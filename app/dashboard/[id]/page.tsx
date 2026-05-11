@@ -34,6 +34,7 @@ export default async function DashboardPage({
         location: event.location,
         description: event.description,
         hostName: event.hostName,
+        shortUrl: event.shortUrl ?? null,
       }}
       rsvps={event.rsvps.map((r) => ({
         id: r.id,

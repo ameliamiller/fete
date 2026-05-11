@@ -17,6 +17,7 @@ model Event {
   hostName      String
   hostPhone     String
   cohostPhones  String[] @default([])
+  shortUrl      String?
   createdAt     DateTime @default(now())
 
   rsvps      Rsvp[]
