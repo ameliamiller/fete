@@ -33,6 +33,7 @@ interface EventData {
   description: string;
   hostName: string;
   shortUrl: string | null;
+  slug: string | null;
 }
 
 interface Props {
@@ -164,7 +165,25 @@ export function HostDashboard({
         <p className="text-xs font-bold uppercase tracking-widest mb-2">
           Invite link
         </p>
-        {event.shortUrl && (
+        {event.slug && (
+          <div className="border-2 border-black px-4 py-3 mb-2 flex items-center justify-between gap-3">
+            <span className="font-mono text-base font-bold tracking-tight">
+              {typeof window !== "undefined" ? window.location.origin : ""}/e/{event.slug}
+            </span>
+            <button
+              onClick={() => {
+                const url = `${window.location.origin}/e/${event.slug}`;
+                navigator.clipboard.writeText(url);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              }}
+              className="text-xs font-bold border border-black px-3 py-1.5 hover:bg-black hover:text-white transition-colors shrink-0"
+            >
+              {copied ? "✅" : "Copy"}
+            </button>
+          </div>
+        )}
+        {!event.slug && event.shortUrl && (
           <div className="border-2 border-black px-4 py-3 mb-2 flex items-center justify-between gap-3">
             <span className="font-mono text-base font-bold tracking-tight">{event.shortUrl}</span>
             <button

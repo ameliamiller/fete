@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/Button";
@@ -15,6 +15,15 @@ export default function CreateEvent() {
   const [error, setError] = useState("");
   const [emojis, setEmojis] = useState<string[]>([]);
   const [cohosts, setCohosts] = useState<string[]>([]);
+  const [slug, setSlug] = useState("");
+  const [slugEdited, setSlugEdited] = useState(false);
+
+  // Auto-suggest slug from title unless user has manually edited it
+  useEffect(() => {
+    if (!slugEdited) {
+      setSlug(form.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""));
+    }
+  }, [form.title, slugEdited]);
 
   const [form, setForm] = useState({
     title: "",
@@ -44,6 +53,7 @@ export default function CreateEvent() {
           date: etInputToISO(form.date),
           emoji: emojis.join("") || "🎉",
           cohostPhones: cohosts,
+          slug: slug.trim() || undefined,
         }),
       });
       let data: { id?: string; error?: string } = {};
@@ -92,6 +102,30 @@ export default function CreateEvent() {
             required
             maxLength={80}
           />
+        </div>
+
+        {/* Slug */}
+        <div>
+          <label className="block text-xs font-bold uppercase tracking-widest mb-1">
+            Short link{" "}
+            <span className="normal-case font-normal text-gray-400">(optional)</span>
+          </label>
+          <div className="flex items-center border border-black focus-within:ring-2 focus-within:ring-black">
+            <span className="px-3 py-3 text-sm text-gray-400 whitespace-nowrap border-r border-black bg-gray-50">
+              fete/e/
+            </span>
+            <input
+              type="text"
+              value={slug}
+              onChange={(e) => {
+                setSlugEdited(true);
+                setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""));
+              }}
+              placeholder="bk-half"
+              maxLength={40}
+              className="flex-1 px-3 py-3 text-sm bg-white focus:outline-none"
+            />
+          </div>
         </div>
 
         {/* Date */}

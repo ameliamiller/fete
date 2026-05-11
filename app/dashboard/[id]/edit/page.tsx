@@ -24,6 +24,7 @@ export default async function EditEventPage({
         description: event.description,
         hostName: event.hostName,
         cohostPhones: event.cohostPhones,
+        slug: event.slug,
       }}
     />
   );

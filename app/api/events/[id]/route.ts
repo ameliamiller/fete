@@ -28,13 +28,21 @@ export async function PATCH(
   try {
     const { id } = await params;
     const body = await req.json();
-    const { title, emoji, date, location, description, hostName, cohostPhones = [] } = body;
+    const { title, emoji, date, location, description, hostName, cohostPhones = [], slug } = body;
 
     if (!title || !emoji || !date || !location || !hostName) {
       return NextResponse.json({ error: "All fields are required." }, { status: 400 });
     }
 
     const { formatPhone, isValidPhone } = await import("@/lib/phone");
+
+    const cleanSlug = slug ? String(slug).toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 40) : null;
+    if (cleanSlug) {
+      const existing = await prisma.event.findUnique({ where: { slug: cleanSlug } });
+      if (existing && existing.id !== id) {
+        return NextResponse.json({ error: "That short link is already taken. Try another." }, { status: 409 });
+      }
+    }
 
     const event = await prisma.event.update({
       where: { id },
@@ -46,6 +54,7 @@ export async function PATCH(
         description: (description ?? "").trim(),
         hostName: hostName.trim(),
         cohostPhones: (cohostPhones as string[]).filter(isValidPhone).map(formatPhone),
+        slug: cleanSlug,
       },
     });
 

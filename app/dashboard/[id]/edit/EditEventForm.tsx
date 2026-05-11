@@ -18,6 +18,7 @@ interface Props {
     description: string;
     hostName: string;
     cohostPhones: string[];
+    slug: string | null;
   };
 }
 
@@ -29,6 +30,7 @@ export function EditEventForm({ id, initial }: Props) {
     initial.emoji ? Array.from(initial.emoji) : []
   );
   const [cohosts, setCohosts] = useState<string[]>(initial.cohostPhones);
+  const [slug, setSlug] = useState(initial.slug ?? "");
   const [form, setForm] = useState({
     title: initial.title,
     date: utcIsoToETInput(initial.date),
@@ -55,6 +57,7 @@ export function EditEventForm({ id, initial }: Props) {
           date: etInputToISO(form.date),
           emoji: emojis.join("") || initial.emoji,
           cohostPhones: cohosts,
+          slug: slug.trim() || null,
         }),
       });
       const data = await res.json();
@@ -94,6 +97,26 @@ export function EditEventForm({ id, initial }: Props) {
             required
             maxLength={80}
           />
+        </div>
+
+        <div>
+          <label className="block text-xs font-bold uppercase tracking-widest mb-1">
+            Short link{" "}
+            <span className="normal-case font-normal text-gray-400">(optional)</span>
+          </label>
+          <div className="flex items-center border border-black focus-within:ring-2 focus-within:ring-black">
+            <span className="px-3 py-3 text-sm text-gray-400 whitespace-nowrap border-r border-black bg-gray-50">
+              fete/e/
+            </span>
+            <input
+              type="text"
+              value={slug}
+              onChange={(e) => setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ""))}
+              placeholder="bk-half"
+              maxLength={40}
+              className="flex-1 px-3 py-3 text-sm bg-white focus:outline-none"
+            />
+          </div>
         </div>
 
         <div>
