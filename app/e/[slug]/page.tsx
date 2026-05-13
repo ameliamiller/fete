@@ -1,13 +1,10 @@
-import { redirect, notFound } from "next/navigation";
-import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
-export default async function SlugRedirect({
+export default async function LegacySlugRedirect({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const event = await prisma.event.findUnique({ where: { slug } });
-  if (!event) notFound();
-  redirect(`/event/${event.id}`);
+  redirect(`/${slug}`);
 }

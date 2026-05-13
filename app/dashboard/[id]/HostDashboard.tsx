@@ -168,11 +168,11 @@ export function HostDashboard({
         {event.slug && (
           <div className="border-2 border-black px-4 py-3 mb-2 flex items-center justify-between gap-3">
             <span className="font-mono text-base font-bold tracking-tight">
-              {typeof window !== "undefined" ? window.location.origin : ""}/e/{event.slug}
+              {typeof window !== "undefined" ? window.location.origin : ""}/{event.slug}
             </span>
             <button
               onClick={() => {
-                const url = `${window.location.origin}/e/${event.slug}`;
+                const url = `${window.location.origin}/${event.slug}`;
                 navigator.clipboard.writeText(url);
                 setCopied(true);
                 setTimeout(() => setCopied(false), 2000);

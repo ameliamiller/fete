@@ -106,7 +106,7 @@ export function EditEventForm({ id, initial }: Props) {
           </label>
           <div className="flex items-center border border-black focus-within:ring-2 focus-within:ring-black">
             <span className="px-3 py-3 text-sm text-gray-400 whitespace-nowrap border-r border-black bg-gray-50">
-              fete/e/
+              fete/
             </span>
             <input
               type="text"

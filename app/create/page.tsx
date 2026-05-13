@@ -18,13 +18,6 @@ export default function CreateEvent() {
   const [slug, setSlug] = useState("");
   const [slugEdited, setSlugEdited] = useState(false);
 
-  // Auto-suggest slug from title unless user has manually edited it
-  useEffect(() => {
-    if (!slugEdited) {
-      setSlug(form.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""));
-    }
-  }, [form.title, slugEdited]);
-
   const [form, setForm] = useState({
     title: "",
     date: "",
@@ -112,7 +105,7 @@ export default function CreateEvent() {
           </label>
           <div className="flex items-center border border-black focus-within:ring-2 focus-within:ring-black">
             <span className="px-3 py-3 text-sm text-gray-400 whitespace-nowrap border-r border-black bg-gray-50">
-              fete/e/
+              fete/
             </span>
             <input
               type="text"
